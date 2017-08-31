@@ -161,7 +161,7 @@ class BST <T extends Comparable<T>>
                 stu[i].printAns();
             }
         }
-        System.out.println();       
+        System.out.println(choc);       
    }
 
    public String type;
