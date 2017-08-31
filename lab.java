@@ -23,10 +23,11 @@ class Node<T>
          return data.toString();
       }
 }
-class student<T>
+class student
 {
     private int rollno;
-    private ArrayList<T> answer;
+    private ArrayList<String> answer;
+    public int size=0;
     public student(int r)
     {
         this.rollno= r;
@@ -35,13 +36,15 @@ class student<T>
     {
         return rollno;
     }
-    public void addAns(T a)
+    public void addAns(String a)
     {
         answer.add(a);
+        size++;
     }
     public void printAns()
     {
-        for(T a: answer)
+        System.out.println("Roll no is" +rollno);
+        for(String a: answer)
             System.out.print(a+" ");
     }
 }
@@ -53,7 +56,7 @@ class BST <T extends Comparable<T>>
         BufferedReader inp = new BufferedReader(new InputStreamReader(System.in));
         String[] input = inp.readLine().trim().split("\\s+");
         int x=Integer.parseInt(input[0]); //no of trees
-        int n=Integer.parseInt(input[1]);  //no of nodes in a tree
+        int n=Integer.parseInt(input[1]);  //no of nodes in a tree = no of children
         ArrayList<BST> list = new ArrayList<BST>();
         for(int i=1; i<=x; i++)
         {
@@ -64,6 +67,7 @@ class BST <T extends Comparable<T>>
             {
                 n = Integer.parseInt(inp.readLine());
                 BST<Integer> tempbst = new BST<Integer>();
+                tempbst.type=c;
                 input = inp.readLine().trim().split("\\s+");
                 for(int j=0; j<n ; j++)
                 {
@@ -75,6 +79,7 @@ class BST <T extends Comparable<T>>
             {
                 n = Integer.parseInt(inp.readLine());
                 BST<Float> tempbst = new BST<Float>();
+                tempbst.type=c;
                 input = inp.readLine().trim().split("\\s+");
                 for(int j=0; j<n ; j++)
                 {
@@ -86,6 +91,7 @@ class BST <T extends Comparable<T>>
             {
                 n = Integer.parseInt(inp.readLine());
                 BST<String> tempbst = new BST<String>();
+                tempbst.type=c;
                 input = inp.readLine().trim().split("\\s+");
                 for(int j=0; j<n ; j++)
                 {
@@ -94,14 +100,73 @@ class BST <T extends Comparable<T>>
                 list.add(tempbst);
             }
         }
+        int choc;
+        choc=n;
+        student[] stu = new student[n+1];
+                        String plus;
+                        plus="";
         for(BST it: list)
-            it.traversal();
+        {    
+            if(it.type.equals("Integer"))
+            {
+                ArrayList<Integer> sum= new ArrayList<Integer>();
+                it.traversal(sum);
+            if(stu[it.index]==null)
+            {
+                    stu[it.index]= new student(it.index);
+                    choc=choc-1;
+            }
+                plus="";
+                int z=0;
+                for(Integer a: sum)
+                    z+=a;
+                plus+=z;
+            }
+            else if(it.type.equals("Float"))
+            {
+                ArrayList<Float> sum= new ArrayList<Float>();
+                it.traversal(sum);
+            if(stu[it.index]==null)
+            {
+                    stu[it.index]= new student(it.index);
+                    choc=choc-1;
+            }
+                plus="";
+                float z=0;
+                for(Float a: sum)
+                    z+=a;
+                plus+=z;
+            }
+            else  if(it.type.equals("String"))
+            {
+                ArrayList<String> sum= new ArrayList<String>();
+                it.traversal(sum);
+            if(stu[it.index]==null)
+            {
+                    stu[it.index]= new student(it.index);
+                    choc=choc-1;
+            }
+                plus="";
+                String z="";
+                for(String a: sum)
+                    z+=a;
+                plus+=z;
+            }
+            stu[it.index].addAns(plus);
+        }
+        for(int i=1; i<=n; i++)
+        {
+            if(stu[i]!=null)
+            {
+                stu[i].printAns();
+            }
+        }
         System.out.println();       
    }
 
+   public String type;
    private Node<T> root;
    private int index;
-  // private ArrayList<T> sum= new ArrayList<T>;
    public BST()
    {
       root = null;
@@ -122,18 +187,22 @@ class BST <T extends Comparable<T>>
 
       return p;
    }
-   public void traversal()
+   public void traversal(ArrayList<T> l)
    {
         //sum=null;
-      inOrder(root, 1);
+      inOrder(root, 0, root.data, l);
    }
-   private void inOrder(Node r, int count)
+   private void inOrder(Node<T> r, int count, T val, ArrayList<T> l)
    {
       if (r!= null)
       {
-        inOrder(r.left, count+1); 
+        inOrder(r.left, count, val, l); 
+        count+=1;
+        if(val.compareTo(r.data)==0)
+            index=count;
         System.out.print(r+" ");
-        inOrder(r.right, count+1);
+        l.add(r.data);
+        inOrder(r.right, count, val, l);
       }
    }
 
